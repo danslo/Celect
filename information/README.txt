@@ -1,0 +1,1 @@
+Use this folder for information you wish to share or stuff you want to backup in case official site goes down.

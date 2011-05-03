@@ -1,0 +1,8 @@
+#ifndef GSCLASSALLOCATIONSITE_H
+#define GSCLASSALLOCATIONSITE_H
+
+struct GSClassAllocationSite {
+
+};
+
+#endif // GSCLASSALLOCATIONSITE_H
