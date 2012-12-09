@@ -13,4 +13,6 @@ public:
 
 };
 
+bool __cdecl writeSocketBytesBlocking(int, char const *, int);
+
 #endif // GSINTERPRETER_H

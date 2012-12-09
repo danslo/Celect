@@ -94,6 +94,5 @@ int main(int argc, char *argv[]) {
     fclose(data_fp);
     fclose(index_fp);
     free_string_table(table);
-
     return 0;
 }

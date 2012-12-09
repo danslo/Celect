@@ -27,5 +27,6 @@ obj/
 [Bb]in
 [Dd]ebug*/
 [Rr]elease*/
-commonunpack/unpacked/
-gsunpack/classes/
+src/commonunpack/unpacked/
+src/gsunpack/classes/
+src/gsparser/dump/

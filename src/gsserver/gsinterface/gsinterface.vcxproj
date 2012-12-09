@@ -87,6 +87,7 @@
     <ClInclude Include="gsgeneral.h" />
     <ClInclude Include="gsinterpreter.h" />
     <ClInclude Include="gsobjectbase.h" />
+    <ClInclude Include="NetworkPeerTCPIPWin32.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

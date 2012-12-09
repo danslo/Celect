@@ -37,15 +37,31 @@ extern "C" __declspec(dllexport) void celetaniaStartup() {
 		--server	someword		-> unknown
 		--config	someword		-> unknown
 	*/
+	
+	/*
+	__asm {
+		push objectBase;
+	}
+	startupClass->getMethod("startObjectLocatorServer()")();
+	*/
+
+
 	const char *config = "--server full --port 1060";
 	__asm {
 		push config;
 		push objectBase; 
 	}
-	startup();
-
+	startupClass->getMethod("startup(string)")();
 	startupClass->getMethod("loop()")();
 
+	/*
+	__asm {
+		push objectBase;
+	}
+	startupClass->getMethod("initStorageAccessFileDbFull()")();
+	
+	startupClass->getMethod("loop()")();
+*/
 	shutdownSockets();
 	shutdownGC();
 }

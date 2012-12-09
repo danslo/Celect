@@ -1,8 +1,14 @@
 #include <cstring>
+#include <WinSock2.h>
 #include <windows.h>
+#include <stdio.h>
 
-unsigned int internalAuthConnection(void *ptr) {
-	OutputDebugStringA("STUB: internalAuthConnection");
+#include "NetworkPeerTCPIPWin32.h"
+#include "gsinterpreter.h"
+
+unsigned int internalAuthConnection(void *a, NetworkPeerTCPIPWin32 *b) {
+	char buf[] = "sup mom";
+	writeSocketBytesBlocking(b->s, buf, strlen(buf));
 	return 0;
 }
 
@@ -46,6 +52,11 @@ unsigned int afterShutdown() {
 	return 0;
 }
 
+unsigned int handleNetworkPacket(void *a) {
+	OutputDebugStringA("STUB: handleNetworkPacket");
+	return 0;
+}
+
 extern "C" __declspec(dllexport) void* __cdecl GSNativeGetMethodImpl_Cluster_ObjectLocatorServer(const char *methodName) {
 	if(strcmp(methodName, "internalAuthConnection(pointer)") == 0) 
 		return &internalAuthConnection;
@@ -69,5 +80,7 @@ extern "C" __declspec(dllexport) void* __cdecl GSNativeGetMethodImpl_Cluster_Obj
 		return &checkPing;
 	if(strcmp(methodName, "afterShutdown()") == 0) 
 		return &afterShutdown;
+	if(strcmp(methodName, "handleNetworkPacket(pointer)") == 0) 
+		return &handleNetworkPacket;
 	return NULL;
 }

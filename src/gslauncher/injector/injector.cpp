@@ -1,8 +1,13 @@
 #include <windows.h>
 #include <stdio.h>
 #include <tlhelp32.h>
+#include <vector>
+#include <string>
 
-#define PROCESS_NAME L"Celetania.exe"
+const wchar_t *filenames[] = {
+	L"Celetania.exe",
+	L"Celetania_client.exe"
+};
 
 BOOL injectDll(DWORD dwProcessId, const char *dllName) {
    // Attempt to open the process.
@@ -14,9 +19,10 @@ BOOL injectDll(DWORD dwProcessId, const char *dllName) {
 	// Create a remote thread to load our DLL.
 	LPVOID lpRemoteString = (LPVOID)VirtualAllocEx(hProc, NULL, strlen(dllName), MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
 	WriteProcessMemory(hProc, (LPVOID)lpRemoteString, dllName, strlen(dllName), NULL);
-	HANDLE hRemoteThread = CreateRemoteThread(hProc, NULL, NULL, (LPTHREAD_START_ROUTINE)lpLoadLibraryAddress, (LPVOID)lpRemoteString, NULL, NULL);   
-   
+	HANDLE hRemoteThread = CreateRemoteThread(hProc, NULL, NULL, (LPTHREAD_START_ROUTINE)lpLoadLibraryAddress, (LPVOID)lpRemoteString, NULL, NULL);
+
 	// Cleanup.
+	VirtualFreeEx(hProc, (LPVOID)lpRemoteString, strlen(dllName), MEM_RELEASE);
 	CloseHandle(hProc);
 
 	return hRemoteThread != NULL;
@@ -30,22 +36,24 @@ DWORD getProcessId(const wchar_t *fileName) {
 	if(Process32First(hSnapshot, &pEntry)) {
 		do {
 			if(!wcscmp(pEntry.szExeFile, fileName)) {
+				CloseHandle(hSnapshot);
 				return pEntry.th32ProcessID;
 			}
 		} while(Process32Next(hSnapshot, &pEntry));
 	}
+	CloseHandle(hSnapshot);
 
 	return NULL;
 }
 
-int main() {
+void injectThread(const wchar_t *processName) {
 	while (true) {
 		// Wait for process to load.
-		wprintf(L"Waiting for %s to load...\n", PROCESS_NAME);
+		wprintf(L"Waiting for %s to load...\n", processName);
 		DWORD dwProcessId = NULL;
 		do {
-			Sleep(1000);
-			dwProcessId = getProcessId(PROCESS_NAME);
+			Sleep(10);
+			dwProcessId = getProcessId(processName);
 		} while (dwProcessId == NULL);
 
 		// Attempt to inject DLL.
@@ -57,11 +65,18 @@ int main() {
 			printf("done!\n");
 		}
 
-		// Now wait for it to unload ;)
+		// Now wait for it to unload.
 		do {
-			Sleep(100);
-			dwProcessId = getProcessId(PROCESS_NAME);
+			Sleep(10);
+			dwProcessId = getProcessId(processName);
 		} while (dwProcessId != NULL);
 	}
+}
+
+int main() {
+	for (int i = 0; i < sizeof(filenames) / sizeof(wchar_t *); i++) {
+		CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)injectThread, (LPVOID)filenames[i], NULL, NULL);
+	}
+	getchar();
 	return 0;
 }
