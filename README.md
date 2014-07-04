@@ -35,3 +35,6 @@ Here reside the native DLLs responsible for providing native functionality to th
 
 ## gsunpack
 Extracts gsclasses from the index files located in GAMEFOLDER\gsclasses and decrypts them.
+
+## gsweb
+Simple scripts that deal with cURL calls made by the Celetania client. Used for update checks.
