@@ -9,7 +9,7 @@ void WINAPI Mine_GetSystemTimeAsFileTime(LPFILETIME lpSystemTimeAsFileTime) {
 	Real_GetSystemTimeAsFileTime(&realFileTime);
 
 	// Just set us back a couple of years :)
-	lpSystemTimeAsFileTime->dwHighDateTime = realFileTime.dwHighDateTime - 300000;
+	lpSystemTimeAsFileTime->dwHighDateTime = realFileTime.dwHighDateTime - 500000;
 	lpSystemTimeAsFileTime->dwLowDateTime  = realFileTime.dwLowDateTime;
 }
 
